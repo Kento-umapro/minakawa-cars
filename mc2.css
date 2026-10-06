@@ -132,49 +132,87 @@ body{
 .mnav a span{font-family:var(--mono);font-size:11px;color:var(--ink-3);letter-spacing:.14em}
 .mnav .mnav-cta{display:grid;gap:12px;margin-top:26px}
 
-/* ---------- ヒーロー ---------- */
-.hero{position:relative;padding:calc(72px + clamp(48px,7vw,90px)) 0 clamp(48px,6vw,80px);overflow:hidden;background:var(--ink);color:var(--cream)}
-.hero::after{
+/* ---------- ヒーロー（左：言葉／右：実車が流れ続ける） ---------- */
+.hero{
+  position:relative;background:var(--ink);color:var(--cream);overflow:hidden;
+  padding:calc(72px + clamp(40px,6vw,76px)) 0 clamp(52px,7vw,88px);
+}
+.hero::before{  /* 奥行きを作るだけの淡い光。色味は足さない */
   content:"";position:absolute;inset:0;pointer-events:none;
-  background:radial-gradient(120% 90% at 78% 10%,rgba(220,80,40,.26),transparent 58%);
+  background:radial-gradient(90% 70% at 12% 0%,rgba(255,255,255,.07),transparent 60%);
 }
-.hero .in{position:relative;z-index:2;max-width:var(--maxw);margin:0 auto;padding:0 var(--gut)}
+.hero .in{
+  position:relative;z-index:2;max-width:var(--maxw);margin:0 auto;padding:0 var(--gut);
+  display:grid;grid-template-columns:minmax(0,1.04fr) minmax(0,.96fr);
+  gap:clamp(28px,4vw,64px);align-items:center;
+}
 .hero-tag{
-  display:inline-flex;align-items:center;gap:9px;padding:8px 16px;border-radius:999px;
-  background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.16);
-  font-size:12px;font-weight:800;letter-spacing:.04em;margin-bottom:22px;
+  display:inline-flex;align-items:center;gap:12px;padding:9px 18px 9px 10px;border-radius:999px;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);
+  font-size:12px;font-weight:800;letter-spacing:.02em;margin-bottom:26px;color:#e6ded2;
 }
-.hero-tag b{color:#ff8a5c}
+.hero-tag b{
+  background:var(--vm);color:#fff;border-radius:999px;padding:4px 11px;
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;font-weight:500;
+}
 .hero h1{
-  font-size:clamp(34px,7.4vw,86px);line-height:1.18;font-weight:900;margin:0;
-  letter-spacing:-.005em;text-wrap:balance;
+  font-size:clamp(33px,5.5vw,70px);line-height:1.2;font-weight:900;margin:0;
+  letter-spacing:-.015em;text-wrap:balance;
 }
-/* フェラーリ側：軽トラと対等に立たせる。輪郭だけだと暗所で沈むので塗る */
-.hero h1 .stroke{
-  position:relative;display:inline-block;
-  color:#ff3a1f;
-  -webkit-text-stroke:0;
-  text-shadow:
-    0 0 1px rgba(255,120,80,.9),
-    0 0 18px rgba(255,58,31,.55),
-    0 0 46px rgba(255,58,31,.32);
+/* 下線だと行間に埋もれるので、文字そのものを朱に。発光はさせず品を保つ */
+.hero h1 .ferrari{color:#f4511f;white-space:nowrap}
+.hero h1 .all{
+  position:relative;display:inline-block;color:var(--ink);white-space:nowrap;
+  padding:0 .14em;margin:0 .02em;
 }
-.hero h1 .mark{position:relative;display:inline-block;color:#fff}
-.hero h1 .mark::after{
-  content:"";position:absolute;left:-.04em;right:-.04em;bottom:.08em;height:.26em;
-  background:var(--vm);z-index:-1;border-radius:3px;
+.hero h1 .all::before{
+  content:"";position:absolute;inset:.06em -.02em .1em;background:var(--cream);
+  border-radius:4px;z-index:-1;transform:skewX(-6deg);
 }
-.hero p.sub{margin:26px 0 0;font-size:clamp(14.5px,1.8vw,18px);line-height:2.05;color:#cfc6b9;max-width:52ch}
-.hero-cta{display:flex;flex-wrap:wrap;gap:14px;margin-top:36px}
-.hero-note{margin-top:18px;font-size:12.5px;color:#9b9388;letter-spacing:.02em}
+.hero p.sub{
+  margin:28px 0 0;font-size:clamp(14px,1.45vw,16.5px);line-height:2.1;color:#b9b0a4;max-width:44ch;
+}
+.hero-cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:34px}
+.hero-note{margin-top:16px;font-size:12px;color:#857d73;letter-spacing:.01em;line-height:1.8}
+.hero-trust{
+  display:flex;flex-wrap:wrap;gap:8px 10px;margin-top:28px;
+}
+.hero-trust span{
+  font-size:11.5px;font-weight:800;color:#cfc6b9;
+  border:1px solid rgba(255,255,255,.16);border-radius:999px;padding:7px 13px;
+}
+
+/* 右：実車が縦に流れ続ける3列 */
+.hero-reel{
+  position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;
+  height:clamp(400px,46vw,560px);
+  -webkit-mask-image:linear-gradient(transparent,#000 13%,#000 87%,transparent);
+          mask-image:linear-gradient(transparent,#000 13%,#000 87%,transparent);
+}
+.hero-reel .col{overflow:hidden;position:relative}
+.hero-reel .run{display:flex;flex-direction:column;gap:12px;animation:reel 44s linear infinite;will-change:transform}
+.hero-reel .col:nth-child(2) .run{animation-duration:58s;animation-direction:reverse}
+.hero-reel .col:nth-child(3) .run{animation-duration:50s}
+@keyframes reel{from{transform:translate3d(0,0,0)}to{transform:translate3d(0,-50%,0)}}
+.hero-reel img{
+  width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:10px;
+  filter:saturate(.92) contrast(1.03);
+}
+.hero:hover .hero-reel .run{animation-play-state:paused}
+
 .hero-stats{
-  display:grid;grid-template-columns:repeat(4,1fr);gap:1px;margin-top:clamp(44px,6vw,72px);
-  background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.14);border-radius:var(--r-lg);overflow:hidden;
+  grid-column:1 / -1;
+  display:grid;grid-template-columns:repeat(4,1fr);gap:1px;margin-top:clamp(40px,5vw,64px);
+  background:rgba(255,255,255,.12);border-top:1px solid rgba(255,255,255,.12);
+  border-bottom:1px solid rgba(255,255,255,.12);
 }
-.hero-stats div{background:var(--ink);padding:22px 18px;text-align:center}
-.hero-stats b{display:block;font-family:var(--mono);font-size:clamp(24px,3.4vw,38px);font-weight:600;line-height:1.1;color:#fff}
-.hero-stats b i{font-style:normal;font-size:.5em;margin-left:2px;color:#ff8a5c}
-.hero-stats span{display:block;font-size:11.5px;color:#9b9388;margin-top:7px;font-weight:700;letter-spacing:.04em}
+.hero-stats div{background:var(--ink);padding:20px 14px}
+.hero-stats b{
+  display:block;font-family:var(--mono);font-size:clamp(22px,2.9vw,34px);font-weight:500;
+  line-height:1.1;color:#fff;letter-spacing:-.01em;
+}
+.hero-stats b i{font-style:normal;font-size:.46em;margin-left:3px;color:#9b9388}
+.hero-stats span{display:block;font-size:11px;color:#857d73;margin-top:8px;font-weight:700;letter-spacing:.03em}
 
 /* ---------- 実績マーキー ---------- */
 .marquee{padding:0 0 clamp(40px,5vw,64px);background:var(--ink);overflow:hidden}
@@ -389,6 +427,10 @@ body{
   .hard{grid-template-columns:repeat(2,1fr)}
   .co{grid-template-columns:1fr}
 }
+@media (max-width:980px){
+  .hero .in{grid-template-columns:1fr;gap:34px}
+  .hero-reel{height:300px;grid-template-columns:repeat(4,1fr)}
+}
 @media (max-width:900px){
   .nav,.hd-tel{display:none}
   .burger{display:block}
@@ -408,7 +450,9 @@ body{
   .hd .in{height:64px;gap:12px}
   .brand b{font-size:19px}
   .brand span{font-size:9.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:62vw;display:block}
-  .hero{padding-top:calc(64px + 36px)}
+  .hero{padding-top:calc(64px + 30px)}
+  .hero-reel{height:230px;grid-template-columns:repeat(3,1fr);gap:9px}
+  .hero-trust span{font-size:11px;padding:6px 11px}
   .mnav{inset:64px 0 0}
   body{font-size:15.5px;line-height:1.85}
   .sticky{display:block}
