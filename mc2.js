@@ -26,6 +26,20 @@
     });
   }
 
+  /* 見出しの行送り・写真のワイプ：要素が入ったら in-view を付ける */
+  var art = $$('h1, .sec-head, .gal figure, .statement .wrap');
+  if (!('IntersectionObserver' in window)) {
+    art.forEach(function (el) { el.classList.add('in-view'); });
+  } else {
+    var ioA = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add('in-view'); ioA.unobserve(e.target); }
+      });
+    }, { rootMargin: '0px 0px -12% 0px', threshold: 0.12 });
+    art.forEach(function (el) { ioA.observe(el); });
+    setTimeout(function () { art.forEach(function (el) { el.classList.add('in-view'); }); }, 4500);
+  }
+
   /* 出現アニメーション（失敗時は必ず表示されるようフォールバック） */
   var rv = $$('[data-rv]');
   if (!('IntersectionObserver' in window)) {

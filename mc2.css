@@ -426,6 +426,102 @@ body::before{
 }
 
 /* ============================================================
+   ART DIRECTION — 誌面としての演出
+   ============================================================ */
+
+/* ---------- 縦組みのセクション標 ---------- */
+.sec{--label-color:var(--ink-4)}
+.sec--dark{--label-color:rgba(255,255,255,.3)}
+.vlabel{
+  position:absolute;top:clamp(88px,11vw,164px);left:max(14px,calc((100vw - var(--maxw))/2 - 34px));
+  writing-mode:vertical-rl;text-orientation:mixed;
+  font-family:var(--mono);font-size:10px;letter-spacing:.42em;text-transform:uppercase;
+  color:var(--label-color);font-weight:500;z-index:3;pointer-events:none;
+  display:flex;align-items:center;gap:16px;height:auto;
+}
+.vlabel::after{content:"";width:1px;height:76px;background:currentColor;opacity:.5}
+
+/* ---------- 背後の巨大数字 ---------- */
+.sec{overflow:hidden}
+.ghost{
+  position:absolute;right:max(8px,calc((100vw - var(--maxw))/2));
+  top:clamp(40px,5vw,78px);
+  font-family:var(--mono);font-weight:400;
+  font-size:clamp(130px,22vw,310px);line-height:.8;
+  color:var(--ink);opacity:.035;letter-spacing:-.04em;
+  pointer-events:none;user-select:none;z-index:0;
+}
+.sec--dark .ghost{color:#fff;opacity:.05}
+
+/* ---------- 見出しを行ごとに立ち上げる ---------- */
+.rise{display:block;overflow:hidden}
+.rise>span{
+  display:block;transform:translateY(105%);
+  transition:transform 1.05s cubic-bezier(.19,1,.22,1);
+}
+.in-view .rise>span{transform:translateY(0)}
+.in-view .rise:nth-child(2)>span{transition-delay:.09s}
+.in-view .rise:nth-child(3)>span{transition-delay:.18s}
+
+/* ---------- 写真をワイプで開く ---------- */
+.reveal-img{clip-path:inset(0 0 100% 0);transition:clip-path 1.25s cubic-bezier(.19,1,.22,1)}
+.in-view .reveal-img,.reveal-img.in{clip-path:inset(0 0 0 0)}
+
+/* ---------- 全面ステートメント ---------- */
+.statement{
+  position:relative;background:var(--ink);color:var(--paper);
+  padding:clamp(100px,13vw,200px) 0;overflow:hidden;z-index:2;
+}
+.statement .wrap{text-align:center}
+.statement p{
+  margin:0;font-size:clamp(26px,5.4vw,76px);line-height:1.5;font-weight:900;
+  letter-spacing:.01em;text-wrap:balance;
+}
+.statement p em{font-style:normal;color:var(--vm)}
+.statement .sig{
+  margin-top:clamp(28px,3.4vw,48px);font-family:var(--mono);font-size:10.5px;
+  letter-spacing:.34em;color:#6E675D;text-transform:uppercase;
+}
+.statement-bg{
+  position:absolute;inset:0;display:grid;grid-template-columns:repeat(6,1fr);gap:6px;
+  opacity:.12;z-index:0;filter:grayscale(1);
+}
+.statement-bg img{width:100%;height:100%;object-fit:cover}
+.statement .wrap{position:relative;z-index:2}
+
+/* ---------- ギャラリーに大小の変化を付ける ---------- */
+.gal figure:nth-child(7n+1) .ph img{aspect-ratio:4/5}
+.gal figure:nth-child(9n+5) .ph img{aspect-ratio:1/1}
+
+/* ---------- ヒーローのリールを右端まで断ち落とす ---------- */
+/* はみ出しは .hero 側で切る（body に横スクロールを出さないため） */
+.hero{padding-right:0;overflow:hidden}
+.hero .in{padding-right:0}
+.hero-reel{margin-right:calc(-1 * max(0px,(100vw - var(--maxw))/2))}
+
+/* ---------- 文字のホバー ---------- */
+.gal figure:hover .nm{color:var(--vm)}
+.gal .nm{transition:color .3s}
+
+/* ---------- スクロール指示 ---------- */
+.scroll-cue{
+  position:absolute;left:var(--gut);bottom:clamp(22px,3vw,40px);z-index:3;
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.3em;color:var(--ink-4);
+  display:flex;align-items:center;gap:12px;text-transform:uppercase;
+}
+.scroll-cue::after{
+  content:"";width:52px;height:1px;background:var(--ink-4);transform-origin:left;
+  animation:cue 2.4s cubic-bezier(.65,0,.35,1) infinite;
+}
+@keyframes cue{0%{transform:scaleX(0)}50%{transform:scaleX(1)}100%{transform:scaleX(0);transform-origin:right}}
+
+@media (prefers-reduced-motion:reduce){
+  .rise>span{transform:none;transition:none}
+  .reveal-img{clip-path:none;transition:none}
+  .scroll-cue::after{animation:none}
+}
+
+/* ============================================================
    RESPONSIVE — 必ずファイル末尾に置くこと
    ============================================================ */
 .pc{display:inline}
@@ -456,8 +552,16 @@ body::before{
   .ft .in{grid-template-columns:1fr 1fr}
   .ft .brand{grid-column:1 / -1}
 }
+@media (max-width:1180px){
+  /* 本文幅に余白がなくなるので、縦組みラベルは隠す */
+  .vlabel{display:none}
+}
 @media (max-width:720px){
   .pc{display:none}
+  .ghost{font-size:clamp(96px,30vw,150px);opacity:.03;top:26px;right:0}
+  .statement-bg{grid-template-columns:repeat(3,1fr)}
+  .scroll-cue{display:none}
+  .hero-reel{margin-right:0}
   .sp{display:inline}
   body{font-size:15px;line-height:1.95}
   .sticky{display:block}
